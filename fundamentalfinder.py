@@ -14,7 +14,11 @@ score_threshold = 1000  # TODO: totally arbitrary right now
 freqs = sorted(freqs)
 harmonic_list = list(range(1, max_harmonic + 1, 2))
 
-np.set_printoptions(linewidth=200, suppress=True, precision=3)
+precision = 3  # for rounding, in python, numpy, pandas
+np.set_printoptions(linewidth=200, suppress=True, precision=precision)
+pd.set_option("display.max_rows", len(harmonic_list) + 2)
+pd.set_option("display.max_columns", len(harmonic_list) + 2)
+pd.set_option("display.precision", precision)
 
 
 def score_match(f1, f2):
@@ -84,11 +88,11 @@ for i1, freq1 in enumerate(freqs):
         best_harmonic_score_mtx[i1, i2] = max_score
 
         print(
-            f"Most likely common fundamental for {freq1} and {freq2}: approx {(fund1+fund2)/2} (averaged)"
+            f"Most likely common fundamental for {freq1} and {freq2}: approx {round((fund1+fund2)/2, precision)} (averaged)"
         )
-        print(f"{freq1} = {multiple1} x {fund1}")
-        print(f"{freq2} = {multiple2} x {fund2}")
-        print(f"Score: {max_score}")
+        print(f"{freq1} = {multiple1} x {round(fund1,precision)}")
+        print(f"{freq2} = {multiple2} x {round(fund2,precision)}")
+        print(f"Score: {round(max_score,3)}")
         print()
 
 print("--------------")
