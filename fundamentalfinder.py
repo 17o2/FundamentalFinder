@@ -57,9 +57,9 @@ print()
 for i1, freq1 in enumerate(freqs):
     # generate candidates for fundamental frequency
     funds1 = [freq1 / n for n in harmonic_list]
-
-    for i2, freq2 in enumerate(freqs[i1 + 1 :]):
-        true_i2 = i2 + i1 + 1  # shift iterator index because we start from i1+1
+    offset_for_i2 = i1 + 1  # only fill upper right triangle of result matrix
+    for i2_fromzero, freq2 in enumerate(freqs[offset_for_i2:]):
+        i2 = i2_fromzero + offset_for_i2  # match iterator index to matrix index
         funds2 = [freq2 / n for n in harmonic_list]
 
         print(f"Comparing {freq1} and {freq2}")
@@ -80,8 +80,8 @@ for i1, freq1 in enumerate(freqs):
         multiple2 = harmonic_list[max_idx2d[1]]
         fund1, fund2 = freq1 / multiple1, freq2 / multiple2
 
-        best_harmonic_avg_mtx[i1, true_i2] = (fund1 + fund2) / 2
-        best_harmonic_score_mtx[i1, true_i2] = max_score
+        best_harmonic_avg_mtx[i1, i2] = (fund1 + fund2) / 2
+        best_harmonic_score_mtx[i1, i2] = max_score
 
         print(
             f"Most likely common fundamental for {freq1} and {freq2}: approx {(fund1+fund2)/2} (averaged)"
