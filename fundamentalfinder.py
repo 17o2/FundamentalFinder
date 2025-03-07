@@ -6,8 +6,8 @@ import sys
 precision = 3  # for rounding, in python, numpy, pandas
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
 logging.basicConfig(
-    level=logging.WARNING,
     format="%(message)s",  # "%(levelname)s:%(message)s"
 )  # filename="log.log"
 # logger.removeHandler(sys.stderr)
@@ -124,11 +124,11 @@ def find_fundamentals(
 
     print("Final results:")
 
-    print("Most likely common fundamental:")
-    print_with_freq_headers(best_harmonic_avg_mtx, freqs)
-
-    print("Confidence score for most likely fundamental:")
-    print_with_freq_headers(best_harmonic_score_mtx, freqs)
+    if logger.level <= logging.DEBUG:
+        print("Most likely common fundamental:")
+        print_with_freq_headers(best_harmonic_avg_mtx, freqs)
+        print("Confidence score for most likely fundamental:")
+        print_with_freq_headers(best_harmonic_score_mtx, freqs)
 
     best_harmonic_avg_filtered_mtx = np.where(
         best_harmonic_score_mtx < distance_threshold, 0, best_harmonic_avg_mtx
