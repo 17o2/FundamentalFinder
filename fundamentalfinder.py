@@ -122,7 +122,7 @@ def find_fundamentals(
             logger.info(f"{freq2} = {multiple2} x {round(fund2,precision)}")
             logger.info(f"Score: {round(max_score,3)}\n")
 
-    print("Final results:")
+    # print("Final results:")
 
     if logger.level <= logging.DEBUG:
         print("Most likely common fundamental:")
@@ -133,19 +133,16 @@ def find_fundamentals(
     best_harmonic_avg_filtered_mtx = np.where(
         best_harmonic_score_mtx < distance_threshold, 0, best_harmonic_avg_mtx
     )
-    print(
-        f"Most likely common fundamental:\n"
-        f"(if score is above threshold of {distance_threshold})"
-    )
+    print(f"Most likely common fundamentals (inverse distance > {distance_threshold}):")
     print_with_freq_headers(best_harmonic_avg_filtered_mtx, freqs)
 
     funds_list = [f for f in best_harmonic_avg_filtered_mtx.ravel() if f > 0]
     funds_list = list(set(funds_list))
     funds_list = sorted(funds_list)
 
-    print("List of candidates for fundamentals:")
+    logger.debug("List of candidates for fundamentals:")
     for f in funds_list:
-        print(f"- {round(f,precision)}")
+        logger.debug(f"- {round(f,precision)}")
 
     merged = merge_relative(funds_list, similarity_threshold)
     reduced = []
@@ -154,10 +151,8 @@ def find_fundamentals(
             f"Group: {np.array(group)} → Merged into: {round(merged_value,precision)}"
         )
         reduced.append(merged_value)
-    print()
+    logger.debug("")
 
-    print(
-        f"Reduced list of candidates (similarity threshold: {similarity_threshold*100}%):"
-    )
+    print(f"Reduced list of candidates (similarity > {similarity_threshold*100}%):")
     for f in reduced:
         print(f"- {round(f,precision)}")

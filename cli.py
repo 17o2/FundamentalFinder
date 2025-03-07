@@ -65,8 +65,8 @@ def fundamentalfinder(
     )
     for f in freqs:
         print(f"- {f}")
-    print(f"Score threshold: {distance_threshold}")
-    print(f"Similarity threshold: {similarity_threshold*100}%")
+    # print(f"Score threshold: {distance_threshold}")
+    # print(f"Similarity threshold: {similarity_threshold*100}%")
     print()
 
     ff.find_fundamentals(
