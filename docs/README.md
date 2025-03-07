@@ -9,3 +9,9 @@ or
 ```
 $ cat frequencies.txt | ./cli.py
 ```
+
+or pass a list of frequencies directly:
+
+```
+$ echo "12.3, 45.6, 78.9" | ./cli.py
+```
