@@ -29,7 +29,11 @@ def print_with_factor_and_fund_headers(mtx, f1, f2, harmonic_list):
 
 
 def print_with_freq_headers(mtx, freq_list):
-    df = pd.DataFrame(mtx, columns=freq_list, index=freq_list)
+    df = pd.DataFrame(
+        np.where(mtx == 0, "-", np.round(mtx, precision)),
+        columns=freq_list,
+        index=freq_list,
+    )
     print(f"{df}\n")
 
 
@@ -116,7 +120,7 @@ def find_fundamentals(
             )
             logger.info(f"{freq1} = {multiple1} x {round(fund1,precision)}")
             logger.info(f"{freq2} = {multiple2} x {round(fund2,precision)}")
-            logger.info(f"Score: {round(max_score,3)}")
+            logger.info(f"Score: {round(max_score,3)}\n")
 
     print("Final results:")
 
@@ -139,12 +143,14 @@ def find_fundamentals(
 
     print("List of candidates for fundamentals:")
     for f in funds_list:
-        print(f"- {f}")
+        print(f"- {round(f,precision)}")
 
     merged = merge_relative(funds_list, similarity_threshold)
     reduced = []
     for group, merged_value in merged:
-        logger.debug(f"Group: {np.array(group)} → Merged into: {merged_value}")
+        logger.debug(
+            f"Group: {np.array(group)} → Merged into: {round(merged_value,precision)}"
+        )
         reduced.append(merged_value)
     print()
 
@@ -152,4 +158,4 @@ def find_fundamentals(
         f"Reduced list of candidates (similarity threshold: {similarity_threshold*100}%):"
     )
     for f in reduced:
-        print(f"- {f}")
+        print(f"- {round(f,precision)}")
