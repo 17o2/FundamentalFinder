@@ -1,7 +1,16 @@
 import numpy as np
 import pandas as pd
+import logging
+import sys
 
 precision = 3  # for rounding, in python, numpy, pandas
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.WARNING,
+    format="%(message)s",  # "%(levelname)s:%(message)s"
+)  # filename="log.log"
+# logger.removeHandler(sys.stderr)
 
 
 def score_match(f1, f2):
@@ -16,15 +25,12 @@ def score_match(f1, f2):
 
 def print_with_factor_and_fund_headers(mtx, f1, f2, harmonic_list):
     df = pd.DataFrame(mtx, columns=[f1, harmonic_list], index=[f2, harmonic_list])
-    print("Score for the common fundamental:")
-    print(df)
-    print()
+    logger.info(f"Score for the common fundamental:\n{df}\n")
 
 
 def print_with_freq_headers(mtx, freq_list):
     df = pd.DataFrame(mtx, columns=freq_list, index=freq_list)
-    print(df)
-    print()
+    print(f"{df}\n")
 
 
 def find_fundamentals(freqs, max_harmonic, threshold, even=False):
@@ -59,7 +65,7 @@ def find_fundamentals(freqs, max_harmonic, threshold, even=False):
             i2 = i2_fromzero + offset_for_i2  # match iterator index to matrix index
             funds2 = [freq2 / n for n in harmonic_list]
 
-            print(f"Comparing {freq1} and {freq2}")
+            logger.debug(f"Comparing {freq1} and {freq2}")
             # score all combination of the candidates for common fundamental
             score_mtx = score_match(*np.meshgrid(funds1, funds2, indexing="xy"))
             #                                             for column first ^
@@ -80,17 +86,14 @@ def find_fundamentals(freqs, max_harmonic, threshold, even=False):
             best_harmonic_avg_mtx[i1, i2] = (fund1 + fund2) / 2
             best_harmonic_score_mtx[i1, i2] = max_score
 
-            print(
+            logger.info(
                 f"Most likely common fundamental for {freq1} and {freq2}: approx {round((fund1+fund2)/2, precision)} (averaged)"
             )
-            print(f"{freq1} = {multiple1} x {round(fund1,precision)}")
-            print(f"{freq2} = {multiple2} x {round(fund2,precision)}")
-            print(f"Score: {round(max_score,3)}")
-            print()
+            logger.info(f"{freq1} = {multiple1} x {round(fund1,precision)}")
+            logger.info(f"{freq2} = {multiple2} x {round(fund2,precision)}")
+            logger.info(f"Score: {round(max_score,3)}")
 
-    print("--------------")
     print("Final results:")
-    print()
 
     print("Most likely common fundamental:")
     print_with_freq_headers(best_harmonic_avg_mtx, freqs)
@@ -106,5 +109,3 @@ def find_fundamentals(freqs, max_harmonic, threshold, even=False):
         f"(if score is above threshold of {threshold})"
     )
     print_with_freq_headers(best_harmonic_avg_filtered_mtx, freqs)
-
-    print()
