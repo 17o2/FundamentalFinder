@@ -13,7 +13,7 @@ import fundamentalfinder as ff
     type=str,
     default="\n",
     # show_default=True,
-    help="Separator of frequency list  [default: \\n]",
+    help="Separator of frequency list [default: '\\n', fallback: ',']",
 )
 @click.option(
     "-h",
