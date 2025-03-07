@@ -140,6 +140,8 @@ def find_fundamentals(
     print_with_freq_headers(best_harmonic_avg_filtered_mtx, freqs)
 
     funds_list = [f for f in best_harmonic_avg_filtered_mtx.ravel() if f > 0]
+    funds_list = list(set(funds_list))
+    funds_list = sorted(funds_list)
 
     print("List of candidates for fundamentals:")
     for f in funds_list:
