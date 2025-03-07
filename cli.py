@@ -24,12 +24,20 @@ import fundamentalfinder as ff
     help="Maximum harmonic multiple to analyze",
 )
 @click.option(
-    "-t",
-    "--threshold",
+    "-d",
+    "--distance-threshold",
     type=int,
     default=1000,
     show_default=True,
     help="Threshold of matching score",
+)
+@click.option(
+    "-s",
+    "--similarity-threshold",
+    type=float,
+    default=0.01,
+    show_default=True,
+    help="Threshold of similarity when grouping fundamental candidates",
 )
 @click.option(
     "-e",
@@ -39,7 +47,9 @@ import fundamentalfinder as ff
     show_default=True,
     help="Also include even frequencies",
 )
-def fundamentalfinder(separator, max_harmonic, threshold, even):
+def fundamentalfinder(
+    separator, max_harmonic, distance_threshold, similarity_threshold, even
+):
     freqs = sys.stdin.read().split(separator)
     freqs = [f for f in freqs if not f == ""]
     # hack / for comfort: use comma as second fallback default separator
@@ -55,10 +65,13 @@ def fundamentalfinder(separator, max_harmonic, threshold, even):
     )
     for f in freqs:
         print(f"- {f}")
-    print(f"Score threshold: {threshold}")
+    print(f"Score threshold: {distance_threshold}")
+    print(f"Similarity threshold: {similarity_threshold*100}%")
     print()
 
-    ff.find_fundamentals(freqs, max_harmonic, threshold, even)
+    ff.find_fundamentals(
+        freqs, max_harmonic, distance_threshold, similarity_threshold, even
+    )
 
 
 if __name__ == "__main__":

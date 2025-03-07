@@ -56,7 +56,9 @@ def merge_relative(numbers, threshold):
     return list(zip(groups, merged))
 
 
-def find_fundamentals(freqs, max_harmonic, threshold, even=False):
+def find_fundamentals(
+    freqs, max_harmonic, distance_threshold, similarity_threshold, even=False
+):
 
     freqs = sorted(freqs)
     num_freqs = len(freqs)
@@ -125,11 +127,11 @@ def find_fundamentals(freqs, max_harmonic, threshold, even=False):
     print_with_freq_headers(best_harmonic_score_mtx, freqs)
 
     best_harmonic_avg_filtered_mtx = np.where(
-        best_harmonic_score_mtx < threshold, 0, best_harmonic_avg_mtx
+        best_harmonic_score_mtx < distance_threshold, 0, best_harmonic_avg_mtx
     )
     print(
         f"Most likely common fundamental:\n"
-        f"(if score is above threshold of {threshold})"
+        f"(if score is above threshold of {distance_threshold})"
     )
     print_with_freq_headers(best_harmonic_avg_filtered_mtx, freqs)
 
@@ -139,14 +141,15 @@ def find_fundamentals(freqs, max_harmonic, threshold, even=False):
     for f in funds_list:
         print(f"- {f}")
 
-    merge_threshold = 0.01
-    merged = merge_relative(funds_list, merge_threshold)
+    merged = merge_relative(funds_list, similarity_threshold)
     reduced = []
     for group, merged_value in merged:
         logger.debug(f"Group: {np.array(group)} → Merged into: {merged_value}")
         reduced.append(merged_value)
     print()
 
-    print(f"Reduced list of candidates (similarity threshold: {merge_threshold*100}%):")
+    print(
+        f"Reduced list of candidates (similarity threshold: {similarity_threshold*100}%):"
+    )
     for f in reduced:
         print(f"- {f}")
