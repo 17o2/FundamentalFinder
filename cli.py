@@ -19,7 +19,7 @@ import fundamentalfinder as ff
     "-h",
     "--max-harmonic",
     type=int,
-    default=11,
+    default=15,
     show_default=True,
     help="Maximum harmonic multiple to analyze",
 )
